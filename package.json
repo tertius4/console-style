@@ -1,0 +1,9 @@
+{
+  "name": "console-style",
+  "version": "1.0.0",
+  "description": "Simple, styled console logging for JavaScript.",
+  "license": "ISC",
+  "author": "Tertius",
+  "type": "module",
+  "main": "index.js"
+}
