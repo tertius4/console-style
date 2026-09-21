@@ -6,10 +6,10 @@ A tiny JavaScript package for styling terminal output with ANSI color codes and 
 
 `console-style` wraps the normal console methods and lets you apply formatting such as:
 
-- bold text
-- italic text
-- text colors
-- background colors
+* bold text
+* italic text
+* text colors
+* background colors
 
 It is small, dependency-free, and designed for Node.js terminal output.
 
@@ -21,107 +21,245 @@ npm i console-style
 
 ## Usage
 
-### `logger.configure(style)`
+### Local logger
 
-Applies a default style to the logger. You can pass either:
-
-1. a single style object for all log methods, or
-2. a method-specific style map.
+Import the logger without modifying the global `console`:
 
 ```js
-import logger from "console-style/logger.js";
+import logger from "console-style/logger";
 
-logger.configure({ color: "green", bold: true });
 logger.log("Hello from console-style");
+logger.warn("Warning");
+logger.error("Something went wrong");
+```
+
+The logger provides:
+
+* `log()`
+* `info()`
+* `warn()`
+* `error()`
+* `debug()`
+
+These methods behave like the standard console methods, but apply styling to string arguments.
+
+### `logger.configure(styles)`
+
+Configures the default style for individual log methods.
+
+```js
+import logger from "console-style/logger";
 
 logger.configure({
-  log: { color: "green" },
-  warn: { color: "yellow" },
-  error: { color: "red" },
+	log: {
+		color: "green",
+	},
+
+	warn: {
+		color: "yellow",
+	},
+
+	error: {
+		color: "red",
+		bold: true,
+	},
 });
 ```
 
-### `logger.style(style)`
-
-Applies a style to the next chained log call only.
+The configured styles are applied whenever the corresponding method is called:
 
 ```js
-import logger from "console-style/logger.js";
-
-logger.style({ italic: true, color: "blue" }).log("Blue italic text");
-logger.log("Normal text again");
+logger.log("Green log");
+logger.warn("Yellow warning");
+logger.error("Bold red error");
 ```
 
-### `logger.log(...)`, `logger.info(...)`, `logger.warn(...)`, `logger.error(...)`, `logger.debug(...)`
+Configuration can be updated later. New properties are merged into the existing style for that method.
 
-These methods behave like the standard console methods, but they apply styling to string arguments.
+```js
+logger.configure({
+	error: {
+		background: "yellow",
+	},
+});
+```
+
+The `error` style now contains the previously configured properties as well as the new background color.
+
+### `logger.style(style)`
+
+Creates a logger with the supplied style applied to its log methods.
+
+```js
+import logger from "console-style/logger";
+
+logger
+	.style({
+		italic: true,
+		color: "blue",
+	})
+	.log("Blue italic text");
+```
+
+The original logger is not modified:
+
+```js
+logger.log("Normal logger output");
+```
+
+The returned logger supports all standard logger methods:
+
+```js
+logger.style({ color: "cyan" }).log("Log");
+logger.style({ color: "green" }).info("Info");
+logger.style({ color: "yellow" }).warn("Warning");
+logger.style({ color: "red" }).error("Error");
+logger.style({ color: "magenta" }).debug("Debug");
+```
 
 ## Global console patch
+
+Importing the package without importing a specific export patches the global `console` object:
 
 ```js
 import "console-style";
 
-console.configure({ color: "magenta", bold: true });
 console.log("This is styled through the global console");
-console.style({ color: "cyan" }).log("Temporary style");
 ```
 
-This patches the global `console` object and replaces:
+The global console gains the same logger configuration and styling API:
 
-- `log`
-- `info`
-- `warn`
-- `error`
-- `debug`
-- `configure`
-- `style`
+```js
+console.configure({
+	log: {
+		color: "green",
+	},
+
+	error: {
+		color: "red",
+		bold: true,
+	},
+});
+
+console.log("Green log");
+console.error("Bold red error");
+```
+
+Temporary styling is also available:
+
+```js
+console
+	.style({
+		color: "cyan",
+		bold: true,
+	})
+	.log("Temporary styled log");
+```
+
+The global patch replaces:
+
+* `log`
+* `info`
+* `warn`
+* `error`
+* `debug`
+
+and adds:
+
+* `configure`
+* `style`
+
+The original console methods are preserved internally.
 
 ### Restore the original console
+
+The original console methods can be restored:
 
 ```js
 import { restore } from "console-style";
 
 restore();
+
 console.log("Back to the original console");
 ```
+
+`restore()` removes the `console-style` modifications and restores the original console methods.
 
 ## Supported colors
 
 The package supports these colors:
 
-- `black`
-- `red`
-- `green`
-- `yellow`
-- `blue`
-- `magenta`
-- `cyan`
-- `white`
+* `black`
+* `red`
+* `green`
+* `yellow`
+* `blue`
+* `magenta`
+* `cyan`
+* `white`
 
 The same names can also be used for backgrounds.
 
 ## Example
 
 ```js
-import { restore } from "console-style";
-import logger from "console-style/logger.js";
+import "console-style";
 
-console.configure({ bold: true, color: "green" });
-console.log("Hello again!");
+console.configure({
+	log: {
+		bold: true,
+		color: "green",
+	},
 
-logger.configure({ color: "red" });
-logger.style({ italic: true, color: "blue" }).log("Styled log message");
-logger.log("Normal logger output");
+	error: {
+		bold: true,
+		color: "red",
+	},
+});
 
-restore();
+console.log("Green log");
+console.error("Bold red error");
+
+console
+	.style({
+		italic: true,
+		color: "blue",
+	})
+	.log("Temporary blue italic log");
+```
+
+For a local logger that does not modify the global console:
+
+```js
+import logger from "console-style/logger";
+
+logger.configure({
+	log: {
+		color: "green",
+	},
+
+	error: {
+		color: "red",
+	},
+});
+
+logger.log("Green log");
+logger.error("Red error");
+
+logger
+	.style({
+		italic: true,
+		color: "blue",
+	})
+	.log("Blue italic log");
 ```
 
 ## Notes
 
-- Styling is applied to string arguments only.
-- Non-string values are passed through unchanged.
-- This package is designed for terminal output and developer tooling, not HTML or browser styling.
-
-## License
-
-ISC
+* Styling is applied to string arguments only.
+* Non-string values are passed through unchanged.
+* Each log method can have its own default style.
+* `style()` creates a separately styled logger and does not modify the existing logger configuration.
+* The global import patches the global `console`.
+* The `console-style/logger` import does not modify the global `console`.
+* The package is designed for terminal output and developer tooling, not HTML or browser styling.
