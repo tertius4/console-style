@@ -5,5 +5,15 @@
   "license": "ISC",
   "author": "Tertius",
   "type": "module",
-  "main": "index.js"
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "types": "./types.d.ts",
+      "import": "./index.js"
+    },
+    "./logger": {
+      "import": "./logger.js",
+      "types": "./logger.d.ts"
+    }
+  }
 }

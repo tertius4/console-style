@@ -16,6 +16,8 @@ for (const method of methods) {
   console[method] = replacement;
 }
 
+/** @type {Logger} */ console = logger;
+
 export function restore() {
   for (const method of methods) {
     console[method] = original[method];
