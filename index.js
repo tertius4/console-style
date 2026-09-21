@@ -1,11 +1,11 @@
-import logger from "../logger.js";
+import { Logger } from "./logger.js";
 
 const methods = ["log", "info", "warn", "error", "debug", "configure", "style"];
 
 /** @type {Partial<Record<keyof Console, Function>>} */
 const original = {};
 
-
+const logger = new Logger();
 for (const method of methods) {
   original[method] = console[method];
 

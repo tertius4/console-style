@@ -1,8 +1,23 @@
 import ANSI from "./ANSI.js";
-import "../types.js";
 
+/**
+ * @typedef {'log' | 'info' | 'warn' | 'error' | 'debug'} LogMethod
+ */
+
+/**
+ * @typedef {'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white'} Color
+ */
+
+/**
+ * @typedef {Object} LogStyle
+ * @property {boolean} [bold]
+ * @property {boolean} [italic]
+ * @property {Color} [color]
+ * @property {Color} [background]
+ */
+
+/** @type {LogMethod[]} */
 const methods = ["log", "info", "warn", "error", "debug"];
-
 const original = {
   log: console.log.bind(console),
   info: console.info.bind(console),
@@ -10,56 +25,6 @@ const original = {
   error: console.error.bind(console),
   debug: console.debug.bind(console),
 };
-
-/** @type {Record<LogMethod, LogStyle>} */
-const defaultStyles = {
-  log: {},
-  info: {},
-  warn: {},
-  error: {},
-  debug: {},
-};
-/** @type {LogStyle} */
-let temporaryStyle = {};
-
-/**
- * @param {LogStyle | Partial<Record<LogMethod, LogStyle>> | undefined} style
- */
-function configure(style = {}) {
-  if (!style || typeof style !== "object") return;
-
-  const hasMethodStyles = methods.some((method) => method in style && style[method] && typeof style[method] === "object");
-
-  if (hasMethodStyles) {
-    for (const method of methods) {
-      const methodStyle = style[method];
-      if (methodStyle) {
-        defaultStyles[method] = {
-          ...defaultStyles[method],
-          ...methodStyle,
-        };
-      }
-    }
-    return;
-  }
-
-  for (const method of methods) {
-    defaultStyles[method] = {
-      ...defaultStyles[method],
-      ...style,
-    };
-  }
-}
-
-/**
- * @param {LogStyle} style
- */
-function style(newStyle) {
-  temporaryStyle = {
-    ...newStyle,
-  };
-  return logger;
-}
 
 /**
  * @param {string} text
@@ -76,38 +41,78 @@ function styleText(text, style) {
   return prefix ? `${prefix}${text}${ANSI.reset}` : text;
 }
 
-/**
- * @param {unknown[]} args
- * @param {LogMethod} method
- */
-function formatArgs(args = [], method) {
-  const mergedStyle = {
-    ...defaultStyles[method],
-    ...temporaryStyle,
+export class Logger {
+  /** @type {Record<LogMethod, LogStyle>} */
+  #style = {
+    log: {},
+    info: {},
+    warn: {},
+    error: {},
+    debug: {},
   };
-  temporaryStyle = {};
 
-  return args.map((arg) => (typeof arg === "string" ? styleText(arg, mergedStyle) : arg));
+  /**
+   * @param {{ [key in LogMethod]?: LogStyle }} style
+   */
+  configure(style) {
+    if (!style || typeof style !== "object") return;
+
+    const hasMethodStyles = methods.some(
+      (method) => method in style && style[method] && typeof style[method] === "object",
+    );
+    if (!hasMethodStyles) return;
+
+    for (const method of methods) {
+      const methodStyle = style[method];
+      if (!methodStyle) continue;
+
+      this.#style[method] = {
+        ...this.#style[method],
+        ...methodStyle,
+      };
+    }
+  }
+
+  /** 
+   * @param {LogStyle} newStyle
+   * @returns {Logger}
+   */
+  style(newStyle) {
+    const temp_logger = new Logger();
+    temp_logger.configure({
+      log: newStyle,
+      info: newStyle,
+      warn: newStyle,
+      error: newStyle,
+      debug: newStyle,
+    });
+    return temp_logger;
+  }
+
+  log = this.#createMethod("log");
+  info = this.#createMethod("info");
+  warn = this.#createMethod("warn");
+  error = this.#createMethod("error");
+  debug = this.#createMethod("debug");
+
+  /**
+   * @param {LogMethod} method
+   */
+  #createMethod(method) {
+    return (...args) => {
+      original[method](...this.#formatArgs(args, method));
+    };
+  }
+
+  /**
+   * @param {unknown[]} args
+   * @param {LogMethod} method
+   */
+  #formatArgs(args = [], method) {
+    const style = this.#style[method];
+
+    return args.map((arg) => (typeof arg === "string" ? styleText(arg, style) : arg));
+  }
 }
 
-/**
- * @param {LogMethod} method
- */
-function createMethod(method) {
-  return (...args) => {
-    original[method](...formatArgs(args, method));
-  };
-}
-
-const logger = {
-  configure,
-  style,
-
-  log: createMethod("log"),
-  info: createMethod("info"),
-  warn: createMethod("warn"),
-  error: createMethod("error"),
-  debug: createMethod("debug"),
-};
-
-export default logger;
+export default new Logger();
