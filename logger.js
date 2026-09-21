@@ -73,7 +73,7 @@ export class Logger {
     }
   }
 
-  /** 
+  /**
    * @param {LogStyle} newStyle
    * @returns {Logger}
    */
@@ -111,7 +111,50 @@ export class Logger {
   #formatArgs(args = [], method) {
     const style = this.#style[method];
 
-    return args.map((arg) => (typeof arg === "string" ? styleText(arg, style) : arg));
+    const isBrowser = typeof globalThis.window !== "undefined" && typeof globalThis.document !== "undefined";
+    if (!isBrowser) {
+      return args.map((arg) => (typeof arg === "string" ? styleText(arg, style) : arg));
+    }
+
+    const formatted = [];
+    const styles = [];
+
+    for (const arg of args) {
+      if (typeof arg === "string") {
+        formatted.push("%c" + arg);
+        styles.push(this.#cssStyle(style));
+      } else {
+        formatted.push("%o");
+        styles.push(arg);
+      }
+    }
+
+    return [formatted.join(" "), ...styles];
+  }
+
+  /**
+   * @param {LogStyle} style
+   */
+  #cssStyle(style) {
+    const css = [];
+
+    if (style.bold) {
+      css.push("font-weight: bold");
+    }
+
+    if (style.italic) {
+      css.push("font-style: italic");
+    }
+
+    if (style.color) {
+      css.push(`color: ${style.color}`);
+    }
+
+    if (style.background) {
+      css.push(`background-color: ${style.background}`);
+    }
+
+    return css.join("; ");
   }
 }
 
