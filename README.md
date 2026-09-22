@@ -1,10 +1,10 @@
-# logstyle
+# Consolux
 
 A tiny, dependency-free JavaScript package for styling `console` output in Node.js terminals and browser DevTools.
 
 ## Overview
 
-`logstyle` wraps the standard console methods and lets you apply formatting such as:
+`consolux` wraps the standard console methods and lets you apply formatting such as:
 
 - bold text
 - italic text
@@ -27,12 +27,12 @@ The same API works in both Node.js and browsers. The package automatically uses 
 ## Installation
 
 ```bash
-npm i logstyle
+npm i consolux
 ```
 
 ## Usage
 
-There are two ways to use `logstyle`:
+There are two ways to use `consolux`:
 
 - **Local logger** — use `logger` without modifying the global `console`.
 - **Global console** — patch the global `console` by importing the package directly.
@@ -44,9 +44,9 @@ There are two ways to use `logstyle`:
 Import the logger without modifying the global `console`:
 
 ```js
-import logger from "logstyle/logger";
+import logger from "consolux/logger";
 
-logger.log("Hello from logstyle");
+logger.log("Hello from consolux");
 logger.info("Information");
 logger.warn("Warning");
 logger.error("Something went wrong");
@@ -68,7 +68,7 @@ These methods behave like the standard console methods, but apply styling to str
 Configures the default style for individual log methods.
 
 ```js
-import logger from "logstyle/logger";
+import logger from "consolux/logger";
 
 logger.configure({
   log: {
@@ -111,7 +111,7 @@ The existing `error` style is preserved and the new background color is added.
 Creates a separately styled logger without modifying the original logger's configuration:
 
 ```js
-import logger from "logstyle/logger";
+import logger from "consolux/logger";
 
 logger
   .style({
@@ -144,7 +144,7 @@ logger.style({ color: "magenta" }).debug("Debug");
 Importing the package directly patches the global `console`:
 
 ```js
-import "logstyle";
+import "consolux";
 
 console.log("This is styled through the global console");
 ```
@@ -196,20 +196,20 @@ The original console methods are preserved internally and can be restored.
 #### Restore the original console
 
 ```js
-import { restore } from "logstyle";
+import { restore } from "consolux";
 
 restore();
 
 console.log("Back to the original console");
 ```
 
-`restore()` restores the original console methods and removes the `logstyle` modifications.
+`restore()` restores the original console methods and removes the `consolux` modifications.
 
 ---
 
 ## Browser and Node.js support
 
-`logstyle` automatically detects the runtime and formats output accordingly.
+`consolux` automatically detects the runtime and formats output accordingly.
 
 ### Node.js
 
@@ -275,7 +275,7 @@ logger
 ### Global console
 
 ```js
-import "logstyle";
+import "consolux";
 
 console.configure({
   log: {
@@ -303,7 +303,7 @@ console
 ### Local logger
 
 ```js
-import logger from "logstyle/logger";
+import logger from "consolux/logger";
 
 logger.configure({
   log: {
@@ -334,8 +334,8 @@ logger
 - Non-string values are passed through to the underlying console method.
 - Each log method can have its own default style.
 - `style()` creates a separately styled logger and does not modify the existing logger configuration.
-- `import "logstyle"` patches the global `console`.
-- `import logger from "logstyle/logger"` does not modify the global `console`.
+- `import "consolux"` patches the global `console`.
+- `import logger from "consolux/logger"` does not modify the global `console`.
 - Node.js output uses ANSI escape codes.
 - Browser output uses `%c` and CSS in DevTools.
 - The package is intended for console and developer-tool output, not HTML or DOM styling.

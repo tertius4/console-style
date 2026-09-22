@@ -1,5 +1,5 @@
 {
-  "name": "logstyle",
+  "name": "consolux",
   "version": "1.0.0",
   "description": "Simple, styled console logging for JavaScript.",
   "license": "MIT",
@@ -12,7 +12,6 @@
     "console",
     "logger",
     "logging",
-    "logstyle",
     "terminal",
     "browser",
     "devtools",
@@ -28,11 +27,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tertius4/logstyle.git"
+    "url": "git+https://github.com/tertius4/consolux.git"
   },
-  "homepage": "https://github.com/tertius4/logstyle#readme",
+  "homepage": "https://github.com/tertius4/consolux#readme",
   "bugs": {
-    "url": "https://github.com/tertius4/logstyle/issues"
+    "url": "https://github.com/tertius4/consolux/issues"
   },
   "exports": {
     ".": {
