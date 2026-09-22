@@ -1,5 +1,5 @@
 {
-  "name": "consolux",
+  "name": "styling-console",
   "version": "1.0.0",
   "description": "Simple, styled console logging for JavaScript.",
   "license": "MIT",
@@ -27,11 +27,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tertius4/consolux.git"
+    "url": "git+https://github.com/tertius4/styling-console.git"
   },
-  "homepage": "https://github.com/tertius4/consolux#readme",
+  "homepage": "https://github.com/tertius4/styling-console#readme",
   "bugs": {
-    "url": "https://github.com/tertius4/consolux/issues"
+    "url": "https://github.com/tertius4/styling-console/issues"
   },
   "exports": {
     ".": {
