@@ -2,6 +2,11 @@
 
 A tiny, dependency-free JavaScript package for styling `console` output in Node.js terminals and browser DevTools.
 
+[![npm version](https://img.shields.io/npm/v/styling-console.svg)](https://www.npmjs.com/package/styling-console)
+[![License](https://img.shields.io/npm/l/styling-console.svg)](https://github.com/tertius4/styling-console/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/tertius4/styling-console.svg)](https://github.com/tertius4/styling-console/issues)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/styling-console)](https://bundlephobia.com/package/styling-console)
+
 ## Overview
 
 `styling-console` wraps the standard console methods and lets you apply formatting such as:
