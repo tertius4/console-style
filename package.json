@@ -2,10 +2,38 @@
   "name": "console-style",
   "version": "1.0.0",
   "description": "Simple, styled console logging for JavaScript.",
-  "license": "ISC",
-  "author": "Tertius",
+  "license": "MIT",
+  "author": "tertius4",
   "type": "module",
-  "main": "index.js",
+  "engines": {
+    "node": ">=14"
+  },
+  "keywords": [
+    "console",
+    "logger",
+    "logging",
+    "console-style",
+    "terminal",
+    "browser",
+    "devtools",
+    "colors",
+    "debugging"
+  ],
+  "files": [
+    "index.js",
+    "logger.js",
+    "logger.d.ts",
+    "types.d.ts",
+    "ANSI.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tertius4/console-style.git"
+  },
+  "homepage": "https://github.com/tertius4/console-style#readme",
+  "bugs": {
+    "url": "https://github.com/tertius4/console-style/issues"
+  },
   "exports": {
     ".": {
       "types": "./types.d.ts",
