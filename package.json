@@ -1,5 +1,5 @@
 {
-  "name": "console-style",
+  "name": "logstyle",
   "version": "1.0.0",
   "description": "Simple, styled console logging for JavaScript.",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "console",
     "logger",
     "logging",
-    "console-style",
+    "logstyle",
     "terminal",
     "browser",
     "devtools",
@@ -28,11 +28,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tertius4/console-style.git"
+    "url": "git+https://github.com/tertius4/logstyle.git"
   },
-  "homepage": "https://github.com/tertius4/console-style#readme",
+  "homepage": "https://github.com/tertius4/logstyle#readme",
   "bugs": {
-    "url": "https://github.com/tertius4/console-style/issues"
+    "url": "https://github.com/tertius4/logstyle/issues"
   },
   "exports": {
     ".": {
